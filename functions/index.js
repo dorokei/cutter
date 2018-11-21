@@ -1,23 +1,27 @@
 const functions = require('firebase-functions');
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+const axios = require('axios');
 
 exports.getSiteInfo = functions.https.onRequest((req, res) => {
   // Grab the text parameter.
   const url = req.query.url;
-  // Push the new message into the Realtime Database using the Firebase Admin SDK.
-  return admin
-    .database()
-    .ref('/messages')
-    .push({ original: original })
-    .then(snapshot => {
-      // Redirect with 303 SEE OTHER to the URL of the pushed object in the Firebase console.
-      return res.redirect(303, snapshot.ref.toString());
+
+  if (!url || url.length == 0) {
+    return res
+      .status(500)
+      .json({ error: 'TypeError: Parameter "url" must be a string.' });
+  }
+
+  axios
+    .get(url)
+    .then(data => {
+      console.log('--------------------');
+      console.log(data.data);
+      const json = {
+        html: 'test'
+      };
+      return res.json(json);
+    })
+    .catch(error => {
+      return res.status(500).json({ error: error });
     });
 });
-
