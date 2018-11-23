@@ -2,6 +2,8 @@ const functions = require('firebase-functions');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const cors = require('cors')({ origin: true });
+const Iconv = require('iconv').Iconv;
+const jschardet = require('jschardet');
 
 exports.getSiteInfo = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
@@ -15,7 +17,19 @@ exports.getSiteInfo = functions.https.onRequest((req, res) => {
     }
 
     axios
-      .get(url)
+      .get(url, {
+        responseType: 'arraybuffer',
+        transformResponse: [
+          data => {
+            const detectResult = jschardet.detect(data);
+            const iconv = new Iconv(
+              detectResult.encoding,
+              'UTF-8//TRANSLIT//IGNORE'
+            );
+            return iconv.convert(data).toString();
+          }
+        ]
+      })
       .then(data => {
         const $ = cheerio.load(data.data);
         const json = {
