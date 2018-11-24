@@ -16,8 +16,16 @@ exports.getSiteInfo = functions.https.onRequest((req, res) => {
         .json({ error: 'TypeError: Parameter "url" must be a string.' });
     }
 
+    console.log('Given url: ' + url);
+
     axios
       .get(url, {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+        },
         responseType: 'arraybuffer',
         transformResponse: [
           data => {
@@ -31,6 +39,7 @@ exports.getSiteInfo = functions.https.onRequest((req, res) => {
         ]
       })
       .then(data => {
+        console.log('status:' + data.status);
         const $ = cheerio.load(data.data);
         const json = {
           site_name: $("meta[property='og:site_name']").attr('content'),
