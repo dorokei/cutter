@@ -26,21 +26,48 @@ exports.getSiteInfo = functions.https.onRequest((req, res) => {
           Accept:
             'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
         },
-        responseType: 'arraybuffer',
+        responseType:
+          'arraybuffer' /*,
         transformResponse: [
           data => {
             const detectResult = jschardet.detect(data);
+            console.log(detectResult.encoding);
             const iconv = new Iconv(
               detectResult.encoding,
               'UTF-8//TRANSLIT//IGNORE'
             );
             return iconv.convert(data).toString();
           }
-        ]
+        ]*/
       })
       .then(data => {
         console.log('status:' + data.status);
-        const $ = cheerio.load(data.data);
+
+        var charset = 'utf-8';
+
+        const contentType = data.headers['content-type'];
+        console.log(contentType);
+        const urlRegex = /charset=[a-zA-Z0-9!-/:-@¥[-`{-~]+/;
+        const matches = contentType.match(urlRegex); // Return null if there is no matches.
+
+        if (matches) {
+          const tmp = matches[0].replace('charset=', '');
+          console.log('Detected charset: ' + tmp);
+          if (tmp.length > 0) {
+            charset = tmp;
+          }
+        } else {
+          console.log('no matches');
+          const detectResult = jschardet.detect(data.data);
+          console.log(detectResult.encoding);
+          charset = detectResult.encoding;
+        }
+
+        console.log('Convert charset from ' + charset + ' to ' + 'UTF-8.');
+        const iconv = new Iconv(charset, 'UTF-8//TRANSLIT//IGNORE');
+        const encodedHtml = iconv.convert(data.data).toString();
+
+        const $ = cheerio.load(encodedHtml);
         const json = {
           site_name: $("meta[property='og:site_name']").attr('content'),
           title: $('title').text(),
