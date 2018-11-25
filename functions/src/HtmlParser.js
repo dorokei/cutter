@@ -1,9 +1,10 @@
 const cheerio = require('cheerio');
+const url = require('url');
 
 var HtmlParser = (function() {
-  var HtmlParser = function(html, url) {
+  var HtmlParser = function(html, givenUrl) {
     this.$ = cheerio.load(html);
-    this.url = url;
+    this.givenUrl = givenUrl;
   };
 
   var p = HtmlParser.prototype;
@@ -33,14 +34,35 @@ var HtmlParser = (function() {
   };
 
   p.ogImage = function() {
-    return this.$("meta[property='og:image']").attr('content');
+    var pathOrUri = this.$("meta[property='og:image']").attr('content');
+    if (pathOrUri) {
+      return this.checkAndConvertUrl(pathOrUri);
+    }
   };
 
   p.faviconImage = function() {
+    var pathOrUri;
     if (this.$("link[rel='shortcut icon']").attr('href')) {
-      return this.$("link[rel='shortcut icon']").attr('href');
+      pathOrUri = this.$("link[rel='shortcut icon']").attr('href');
     } else if (this.$("link[rel='icon']").attr('href')) {
-      return this.$("link[rel='icon']").attr('href');
+      pathOrUri = this.$("link[rel='icon']").attr('href');
+    }
+    if (pathOrUri) {
+      return this.checkAndConvertUrl(pathOrUri);
+    }
+  };
+
+  p.checkAndConvertUrl = function(pathOrUri) {
+    if (
+      pathOrUri.indexOf('http') === 0 ||
+      pathOrUri.indexOf('https') === 0 ||
+      pathOrUri.indexOf('//') === 0
+    ) {
+      return pathOrUri;
+    } else if (pathOrUri.indexOf('/') === 0) {
+      // Relative path pattern
+      const u = url.parse(this.givenUrl);
+      return u.protocol + '//' + u.hostname + pathOrUri;
     }
   };
 
