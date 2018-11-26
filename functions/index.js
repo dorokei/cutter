@@ -33,7 +33,6 @@ exports.getSiteInfo = functions.https.onRequest((req, res) => {
         const parser = new HtmlParser(encodedHtml, url);
         const json = {
           url: url,
-          site_name: parser.siteName(),
           title: parser.title(),
           description: parser.description(),
           og_site_name: parser.ogSiteName(),

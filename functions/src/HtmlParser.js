@@ -9,10 +9,6 @@ var HtmlParser = (function() {
 
   var p = HtmlParser.prototype;
 
-  p.siteName = function() {
-    return this.$("meta[property='og:site_name']").attr('content');
-  };
-
   p.title = function() {
     return this.$('title').text();
   };
