@@ -22,7 +22,12 @@ var HtmlParser = (function() {
   };
 
   p.ogSiteName = function() {
-    return this.$("meta[property='og:site_name']").attr('content');
+    if (this.$("meta[property='og:site_name']").attr('content')) {
+      return this.$("meta[property='og:site_name']").attr('content');
+    } else {
+      const u = url.parse(this.givenUrl);
+      return u.hostname;
+    }
   };
 
   p.ogTitle = function() {
