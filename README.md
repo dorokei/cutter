@@ -1,15 +1,17 @@
 # Get site information from url.
+
 This is the function of Cloud Functions for Firebase.
 Enable to get site information (site name, title, description, favicon image url, etc.) of given url.
 
 ## Sample
+
 If you want to get site information of _dev.to_, you can call below url.
 https://[YOUR_PROJECT_ID].cloudfunctions.net/getSiteInfo?url=https://dev.to/
 
 And, will get below.
+
 ```
 {
-  site_name: 'The DEV Community',
   title:
     'DEV Community  👩‍💻👨‍💻 - Where software engineers connect, build their resumes, and grow.',
   description: 'Where programmers share ideas and help each other grow.',
