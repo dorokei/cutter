@@ -10,7 +10,9 @@ var HtmlParser = (function() {
   var p = HtmlParser.prototype;
 
   p.title = function() {
-    return this.$('title').text();
+    return this.$('title')
+      .text()
+      .trim();
   };
 
   p.description = function() {
