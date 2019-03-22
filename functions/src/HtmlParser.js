@@ -11,17 +11,27 @@ var HtmlParser = (function() {
 
   p.title = function() {
     return this.$('title')
+      .first()
       .text()
+      .replace(/\r?\n/g, '')
       .trim();
   };
 
   p.description = function() {
-    return this.$('meta[name="description"]').attr('content');
+    const title = this.$('meta[name="description"]').attr('content');
+    if (title) {
+      return title.replace(/\r?\n/g, '').trim();
+    }
   };
 
   p.ogSiteName = function() {
     if (this.$("meta[property='og:site_name']").attr('content')) {
-      return this.$("meta[property='og:site_name']").attr('content');
+      const ogSiteName = this.$("meta[property='og:site_name']").attr(
+        'content'
+      );
+      if (ogSiteName) {
+        return ogSiteName.replace(/\r?\n/g, '').trim();
+      }
     } else {
       const u = url.parse(this.givenUrl);
       return u.hostname;
@@ -29,11 +39,19 @@ var HtmlParser = (function() {
   };
 
   p.ogTitle = function() {
-    return this.$("meta[property='og:title']").attr('content');
+    const ogTitle = this.$("meta[property='og:title']").attr('content');
+    if (ogTitle) {
+      return ogTitle.replace(/\r?\n/g, '').trim();
+    }
   };
 
   p.ogDescription = function() {
-    return this.$("meta[property='og:description']").attr('content');
+    const ogDescription = this.$("meta[property='og:description']").attr(
+      'content'
+    );
+    if (ogDescription) {
+      return ogDescription.replace(/\r?\n/g, '').trim();
+    }
   };
 
   p.ogImage = function() {
