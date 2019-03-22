@@ -34,3 +34,41 @@ If you want to customize the response of this api, you could change ``getSiteInf
 This uses the [axios](https://github.com/axios/axios) and [cheerio](https://github.com/cheeriojs/cheerio).
 
 The dependencies are listed in [functions/package.json](functions/package.json).
+
+## Deploy
+
+Install the Firebase CLI using npm by running:
+```
+npm install -g firebase-tools
+```
+
+Sign into Firebase using your Google account by running:
+```
+firebase login
+```
+
+List all of your Firebase projects by running:
+```
+firebase list
+```
+
+Change your firebase app if needed by running:
+```
+firebase use <project_id>
+```
+
+To emulate HTTP functions only, use the following command:
+```
+firebase serve --only functions
+```
+
+Deploy
+```
+firebase deploy --only functions
+```
+
+if you were asked a question below:
+```
+Would you like to proceed with deletion? Selecting no will continue the rest of the deployments.
+```
+Basically you should answer N.
