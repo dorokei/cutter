@@ -71,4 +71,4 @@ if you were asked a question below:
 ```
 Would you like to proceed with deletion? Selecting no will continue the rest of the deployments.
 ```
-Basicaly you should answer N.
+Basically you should answer N.
