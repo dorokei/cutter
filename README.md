@@ -67,7 +67,7 @@ Deploy
 firebase deploy --only functions
 ```
 
-If your were asked below:
+if you were asked a question below:
 ```
 Would you like to proceed with deletion? Selecting no will continue the rest of the deployments.
 ```
